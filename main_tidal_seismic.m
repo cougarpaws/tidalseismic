@@ -40,5 +40,20 @@ dr = a/(N-1); % discretization interval
 U(1:N) = 0; 
 V(1:N) = 0; 
 Kr(1:N) =0 ; 
+<<<<<<< HEAD
 
+%% assemble matrices 
+
+% equation 11 (yuan tian job) 
+
+% equation 22 (Hao Hu job); 
+
+
+% equation 33 (Zheng job) 
+for j =2: N-1 
+end 
+ 
+=======
+% Yuan
 % 
+>>>>>>> 05042499738e1ef41e995ecf2ad9f92a35333ad3
