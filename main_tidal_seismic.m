@@ -42,9 +42,7 @@ V(1:N) = 0;
 Kr(1:N) =0 ; 
 % stiffness matrix Q(3*N, 3*N) 
 Q = zeros (3*N); 
-
-<<<<<<< HEAD
-<<<<<<< HEAD
+ 
 
 %% assemble matrices 
 % (N-2) equations for each ODE 
