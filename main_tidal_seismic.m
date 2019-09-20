@@ -1,4 +1,6 @@
 
+%% this is our first github collaborative project 
+
 clear;
 close all;
 clc;
