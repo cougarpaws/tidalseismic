@@ -62,11 +62,11 @@ kk = 2*N;
 for j =2: N-1 
     rj = (j-1)*dr; 
     krow = krow + 1; % row number 
-    Q (krow, kk+j) = -6; 
-    Q (krow, ku+j) = -8*G*pi*rj*rho; 
-    Q (krow, kv+j) = 24*G*pi*rj*rho; 
-    Q (krow, kk+j-1:kk+j) = 2*rj*[-1 1]/dr; 
-    Q (krow, ku+j-1:ku+j) = -4*G*pi*rj^2*rho*[-1 1]/dr; 
-    Q (krow, ku+j-1:ku+j+1) = rj^2*[1 -2 1]/dr^2; 
+    Q (krow, kk+j) =Q (krow, kk+j) -6; 
+    Q (krow, ku+j) = Q (krow, ku+j) -8*G*pi*rj*rho; 
+    Q (krow, kv+j) = Q (krow, kv+j)+ 24*G*pi*rj*rho; 
+    Q (krow, kk+j-1:kk+j) =Q (krow, kk+j-1:kk+j)+ 2*rj*[-1 1]/dr; 
+    Q (krow, ku+j-1:ku+j) =  Q (krow, ku+j-1:ku+j)-4*G*pi*rj^2*rho*[-1 1]/dr; 
+    Q (krow, ku+j-1:ku+j+1) = Q (krow, ku+j-1:ku+j+1)+ rj^2*[1 -2 1]/dr^2; 
 end 
  
