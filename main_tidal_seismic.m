@@ -55,6 +55,7 @@ Q = zeros (3*N);
 
 
 % equation 33 (Zheng job)  
+
 krow =2*(N-2); 
 ku=0; 
 kv = N; 
@@ -69,4 +70,6 @@ for j =2: N-1
     Q (krow, ku+j-1:ku+j) =  Q (krow, ku+j-1:ku+j)-4*G*pi*rj^2*rho*[-1 1]/dr; 
     Q (krow, ku+j-1:ku+j+1) = Q (krow, ku+j-1:ku+j+1)+ rj^2*[1 -2 1]/dr^2; 
 end 
+
+
  
