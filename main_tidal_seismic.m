@@ -18,3 +18,5 @@ vp = 3000; % m/s
 
 mu = rho * vs*vs; % shear modulus 
 lambda = rho*vp*vp - 2 *mu; % Lame constant  
+
+
