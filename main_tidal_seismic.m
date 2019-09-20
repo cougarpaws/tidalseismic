@@ -40,5 +40,5 @@ dr = a/(N-1); % discretization interval
 U(1:N) = 0; 
 V(1:N) = 0; 
 Kr(1:N) =0 ; 
-% Yuan
+
 % 
