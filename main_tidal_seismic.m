@@ -41,6 +41,7 @@ U(1:N) = 0;
 V(1:N) = 0; 
 Kr(1:N) =0 ; 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 %% assemble matrices 
 
@@ -53,7 +54,3 @@ Kr(1:N) =0 ;
 for j =2: N-1 
 end 
  
-=======
-% Yuan
-% 
->>>>>>> 05042499738e1ef41e995ecf2ad9f92a35333ad3
