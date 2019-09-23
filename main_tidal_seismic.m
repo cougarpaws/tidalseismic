@@ -1,6 +1,8 @@
 
 %% this is our first github collaborative project
-
+% 1am; 9/21; 
+% version by yc, 9/23/2019 Monday 
+% 
 clear;
 close all;
 clc;
@@ -9,6 +11,10 @@ set(0,'defaulttextfontsize',14);
 
 % gravity flag
 flag = 0; % =0: no gravity; =1: with gravity
+
+back_fd =0; 
+forward_fd =0; 
+central_fd = 1; 
 
 % universal gravity constant
 G = 6.67408e-11; % m3/kg/s2
@@ -37,9 +43,9 @@ A = G*moon/rp^3/fac;
 
 %% define number of radial points
 % N = 100;
-N = 40;
+N = 1000;
 dr = a/(N-1); % discretization interval
-
+ri = (0:N-1)*dr; 
 % init [U, V, Kr] along the radial direction
 U(1:N) = 0;
 V(1:N) = 0;
@@ -50,7 +56,18 @@ b = zeros(3*N,1) ;
 
 %% assemble matrices
 % (N-2) equations for each ODE
-
+if back_fd ==1 
+    offset1=-1; offset2=0; 
+    OP1_ = [-1 1]/dr; 
+end
+if central_fd ==1
+    offset1=-1; offset2=+1; 
+    OP1_ =[-1 0 1]/(2*dr); 
+end
+if forward_fd ==1
+    offset1 = 0; offset2 = 1; 
+    OP1_ = [-1 1]/dr;
+end
 % equation 11 (yuan tian job)
 krow = 0;
 ku = 0;
@@ -63,10 +80,10 @@ for j =2: N-1
     if flag==1 % with gravity
         Q(krow, ku+j) = Q(krow, ku+j) + 4/3 * G * pi * rj^2 * rho^2  - 10 * mu - 2 * B * mu;
         Q(krow, kv+j) = Q(krow, kv+j) - 8 * G * pi * rj^2 * rho^2 + 18 * mu + 6 *B * mu;
-        Q(krow, kk+j-1:kk+j) = Q(krow, kk+j-1:kk+j)+ rj^2 * rho *[-1 1]/dr;
+        Q(krow, kk+j+offset1:kk+j+offset2) = Q(krow, kk+j+offset1:kk+j+offset2)+ rj^2 * rho *OP1_;    
     end
-    Q(krow, ku+j-1:ku+j) =  Q(krow, ku+j-1:ku+j) + ( 4 * rj * mu + 2 * B * rj * mu ) * [-1 1]/dr ;
-    Q(krow, kv+j-1:kv+j) =  Q(krow, kv+j-1:kv+j) + ( -6 * rj * rho - 6 * B * rj * mu ) * [-1 1]/dr ;
+    Q(krow, ku+j+offset1:ku+j+offset2) =  Q(krow, ku+j+offset1:ku+j+offset2) + ( 4 * rj * mu + 2 * B * rj * mu ) * OP1_ ;
+    Q(krow, kv+j+offset1:kv+j+offset2) =  Q(krow, kv+j+offset1:kv+j+offset2) + ( -6 * rj * mu - 6 * B * rj * mu ) * OP1_ ;%yz
     Q(krow, ku+j-1:ku+j+1) = Q (krow, ku+j-1:ku+j+1)+ ( 2*rj^2*mu + B * rj^2 * mu ) *  [1 -2 1]/dr^2;
 end
 
@@ -84,8 +101,8 @@ for j =2: N-1
         Q(krow, ku+j) = Q(krow, ku+j) - 4/3 * G * pi * rj^2 * rho^2  + 4 * mu + 2 * B * mu;
     end
     Q(krow, kv+j) = Q(krow, kv+j) - 12 * mu - 6 * B * mu ;
-    Q(krow, ku+j-1:ku+j) =  Q(krow, ku+j-1:ku+j) + ( rj * mu + B * rj * mu ) * [-1 1]/dr ;
-    Q(krow, kv+j-1:kv+j) =  Q(krow, kv+j-1:kv+j) + ( 2 * rj * mu ) * [-1 1]/dr ;
+    Q(krow, ku+j+offset1:ku+j+offset2) =  Q(krow, ku+j+offset1:ku+j+offset2) + ( rj * mu + B * rj * mu ) * OP1_ ;
+    Q(krow, kv+j+offset1:kv+j+offset2) =  Q(krow, kv+j+offset1:kv+j+offset2) + ( 2 * rj * mu ) * OP1_ ;
     Q(krow, kv+j-1:kv+j+1) = Q(krow, kv+j-1:kv+j+1)+ rj^2*mu*[1 -2 1]/dr^2;
 end
 
@@ -101,15 +118,15 @@ if flag==1 % with gravity
         Q (krow, kk+j) =Q (krow, kk+j) -6;
         Q (krow, ku+j) = Q (krow, ku+j) -8*G*pi*rj*rho;
         Q (krow, kv+j) = Q (krow, kv+j)+ 24*G*pi*rj*rho;
-        Q (krow, kk+j-1:kk+j) =Q (krow, kk+j-1:kk+j)+ 2*rj*[-1 1]/dr;
-        Q (krow, ku+j-1:ku+j) =  Q (krow, ku+j-1:ku+j)-4*G*pi*rj^2*rho*[-1 1]/dr;
+        Q (krow, kk+j+offset1:kk+j+offset2) = Q(krow, kk+j+offset1:kk+j+offset2)+ 2*rj*OP1_;
+        Q (krow, ku+j+offset1:ku+j+offset2) =  Q (krow, ku+j+offset1:ku+j+offset2)-4*G*pi*rj^2*rho*OP1_;
         Q (krow, ku+j-1:ku+j+1) = Q (krow, ku+j-1:ku+j+1)+ rj^2*[1 -2 1]/dr^2;
     end
 end
 
 %% Boundary condtions
 % u(0) = 0, v(0) = 0
-krow = krow + 1;
+krow = krow + 1
 Q(krow,1) = 1;
 krow = krow + 1;
 Q(krow,N+1) = 1;
@@ -129,9 +146,9 @@ end
 
 % trr = 0,
 krow = krow + 1;
-Q(krow,N) = Q(krow,N) + 2;
-Q(krow,2*N) = Q(krow,2*N) - 6;
-Q(krow,N-1:N) = Q(krow,N-1:N) + 3*a*[-1 1]/dr;
+Q(krow,N) = Q(krow,N) + 2*B;
+Q(krow,2*N) = Q(krow,2*N) - 6*B;
+Q(krow,N-1:N) = Q(krow,N-1:N) + a*(2+B)*[-1 1]/dr;
 
 %trtheta = 0;
 krow = krow + 1;
@@ -163,16 +180,16 @@ else %% no gravity
     V = x(N+1:2*N);
     figure;
     subplot(2,1,1)
-    plot(U);
+    plot(ri,U,'o-');
     subplot(2,1,2)
-    plot(V);
+    plot(ri,V,'o-');
 end
 
 
 % calculate the h2
 Vnorthpole = G * moon / rp^3 * a^2
 hhydro = Vnorthpole/gplanet
-h2 = U(end) / hhydro * fac
+h2 = U(end) / hhydro *fac 
 
 
 
