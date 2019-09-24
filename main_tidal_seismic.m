@@ -3,9 +3,9 @@
 % 1am; 9/21; 
 % version by yc, 9/23/2019 Monday 
 % 
-clear;
-close all;
-clc;
+clearvars;
+%close all;
+%clc;
 set(0,'defaultaxesfontsize',14);
 set(0,'defaulttextfontsize',14);
 
